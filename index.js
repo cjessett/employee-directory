@@ -8,7 +8,7 @@ if (process.env.NODE_ENV === 'production') {
   app.use(express.static('client/build'));
 }
 
-const rawData = fs.readFileSync('utils/employees.json');
+const rawData = fs.readFileSync('employees.json');
 const employees = JSON.parse(rawData);
 
 app.get('/api/employees', (req, res) => res.json({ result: employees }));

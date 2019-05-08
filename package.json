@@ -7,7 +7,8 @@
     "start": "concurrently \"yarn run server\" \"yarn run client\"",
     "build": "cd client && yarn build",
     "server": "node index.js",
-    "client": "cd client && yarn start"
+    "client": "cd client && yarn start",
+    "seed": "node db/faker.js"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",

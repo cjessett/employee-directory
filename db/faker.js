@@ -46,10 +46,9 @@ function generateEmployee() {
   };
 }
 
-
 const employees = [];
 
-for (let i = 0; i < 100; i++) { // eslint-disable-line no-plusplus
+for (let i = 0; i < 1000; i++) { // eslint-disable-line no-plusplus
   employees.push(generateEmployee());
 }
 

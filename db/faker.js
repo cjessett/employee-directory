@@ -27,7 +27,7 @@ const departments = {
 
 const random = arr => arr[Math.floor(Math.random() * arr.length)];
 
-function generateEmployee() {
+function generateEmployee(id) {
   const firstName = faker.name.firstName();
   const lastName = faker.name.lastName();
   const email = `${firstName}.${lastName}@${company.toLowerCase()}.com`;
@@ -35,6 +35,7 @@ function generateEmployee() {
   const jobTitle = random(departments[department]);
 
   return {
+    id,
     firstName,
     lastName,
     email,
@@ -49,7 +50,7 @@ function generateEmployee() {
 const employees = [];
 
 for (let i = 0; i < 1000; i++) { // eslint-disable-line no-plusplus
-  employees.push(generateEmployee());
+  employees.push(generateEmployee(i));
 }
 
 fs.writeFileSync('employees.json', JSON.stringify(employees));

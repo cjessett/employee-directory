@@ -1,11 +1,13 @@
 import Search from './Search';
 import Filter from './Filter';
 import EmployeeList from './EmployeeList';
-import Employee from './EmployeeListItem';
+import EmployeeItem from './EmployeeListItem';
+import EmployeePage from './EmployeePage';
 
 export {
   Search,
   Filter,
   EmployeeList,
-  Employee,
+  EmployeeItem,
+  EmployeePage
 }

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import 'react-placeholder/lib/reactPlaceholder.css';
 
-import { Search, Filter, EmployeeList, Employee } from './components';
-import getEmployees from './client';
+import { Search, Filter, EmployeeList, EmployeeItem } from './components';
+import { getEmployees } from './client';
 
 export default class App extends Component {
   constructor() {
@@ -59,14 +59,19 @@ export default class App extends Component {
     return this.searchFilter(filtered);
   }
   
+  getVisibleTitles(employees) {
+    const { department, titles } = this.state;
+    if (!department) return titles;
+    return [...new Set(employees.map(e => e.jobTitle))];
+  }
+  
   render() {
     const { departments, locations, department, location, title, searchQuery } = this.state;
-    const ready = !!this.state.employees.length;
     const visibleEmployees = this.getVisibleEmployees(this.state.employees);
     const employees = visibleEmployees
       .sort((a,b) => a.lastName > b.lastName)
-      .map(employee => <Employee key={employee.id} {...employee} />)
-    const visibleTitles = [...new Set(visibleEmployees.map(e => e.jobTitle))]
+      .map(employee => <EmployeeItem key={employee.id} {...employee} />)
+    const visibleTitles = this.getVisibleTitles(visibleEmployees).sort();
     return (
       <div className="container-fluid">
         <header className="d-flex justify-content-center">
@@ -79,9 +84,7 @@ export default class App extends Component {
           <Filter name="Location" options={locations} value={location} onSelect={e => this.handleSelect(e)} />
         </section>
         <section className="d-flex">
-          <ul className="list-group flex-grow-1">
-            <EmployeeList ready={ready} employees={employees} />
-          </ul>
+          <EmployeeList ready={!!this.state.employees.length} employees={employees} />
         </section>
       </div>
     );

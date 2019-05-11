@@ -13,4 +13,10 @@ const { employees } = JSON.parse(rawData);
 
 app.get('/api/employees', (req, res) => res.json({ result: employees }));
 
+app.get('/api/employees/:id', (req, res) => {
+  const id = parseInt(req.params.id, 0);
+  const employee = employees.find(e => e.id === id);
+  res.json({ result: employee });
+});
+
 app.listen(port, () => console.log(`App listening on port ${port}!`));

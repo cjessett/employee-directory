@@ -1,5 +1,5 @@
-export async function getEmployees() {
-  const res = await fetch('/api/employees');
+export async function getEmployees(page = 1) {
+  const res = await fetch(`/api/employees?page=${page}`);
   return res.json();
 }
 

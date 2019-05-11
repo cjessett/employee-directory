@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import 'react-placeholder/lib/reactPlaceholder.css';
 
-import { Search, Filter, EmployeeList, EmployeeItem } from './components';
+import { Search, Filter, EmployeeList, EmployeeItem, Paginator } from './components';
 import { getEmployees } from './client';
 
 export default class App extends Component {
   constructor() {
-    super()
+    super();
     this.state = {
       employees: [],
       departments: [],
@@ -16,15 +16,21 @@ export default class App extends Component {
       location: '',
       title: '',
       searchQuery: '',
+      pageSize: 0,
+      pages: 0,
+      page: 0,
     };
   }
 
   async componentDidMount() {
-    const { result } = await getEmployees();
+    const params = new URLSearchParams(this.props.location.search);
+    const page = parseInt(params.get('page'), 0) || 1;
+    const { result, pageSize, pages } = await getEmployees(page);
+    if (page > pages || page < 1) this.props.history.push('/');
     const departments = [...new Set(result.map(e => e.department))];
     const locations = [...new Set(result.map(e => e.location))];
     const titles = [...new Set(result.map(e => e.jobTitle))];
-    this.setState({ employees: result, departments, locations, titles });
+    this.setState({ employees: result, departments, locations, titles, pageSize, pages, page });
   }
   
   handleSelect(e) {
@@ -66,14 +72,12 @@ export default class App extends Component {
   }
   
   render() {
-    const { departments, locations, department, location, title, searchQuery } = this.state;
+    const { departments, locations, department, location, title, searchQuery, page, pages } = this.state;
     const visibleEmployees = this.getVisibleEmployees(this.state.employees);
-    const employees = visibleEmployees
-      .sort((a,b) => a.lastName > b.lastName)
-      .map(employee => <EmployeeItem key={employee.id} {...employee} />)
+    const employees = visibleEmployees.map(employee => <EmployeeItem key={employee._id} {...employee} />)
     const visibleTitles = this.getVisibleTitles(visibleEmployees).sort();
     return (
-      <div className="container-fluid">
+      <div className="container-fluid mb-5">
         <header className="d-flex justify-content-center">
           <h1>Employee Directory</h1>
         </header>
@@ -83,9 +87,12 @@ export default class App extends Component {
           <Filter name="Title" options={visibleTitles} value={title} onSelect={e => this.handleSelect(e)} />
           <Filter name="Location" options={locations} value={location} onSelect={e => this.handleSelect(e)} />
         </section>
-        <section className="d-flex">
+        <section className="d-flex mb-5">
           <EmployeeList ready={!!this.state.employees.length} employees={employees} />
         </section>
+        <footer className="d-flex justify-content-center align-items-center">
+          <Paginator page={page} pages={pages} />
+        </footer>
       </div>
     );
   }

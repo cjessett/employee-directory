@@ -13,18 +13,18 @@ const locations = [
 ];
 
 const departments = {
-  Design: [ 'Product Designer', 'UX Researcher', 'Senior UX Researcher' ],
+  Design: ['Product Designer', 'UX Researcher', 'Senior UX Researcher'],
   Engineering: [
     'Software Engineer',
     'Site Reliability Engineer',
     'Senior Software Engineer',
   ],
-  Finance: [ 'Financial Analyst', 'Strategic Finance Analyst' ],
-  Legal: [ 'Employment Counsel', 'User Policy Specialist' ],
-  Marketing: [ 'Marketing Operations Manager', 'Presentation Designer' ],
-  People: [ 'Recruiter', 'HR Director' ],
-  Sales: [ 'Enterprise Account Manager', 'Solutions Engineer' ],
-  Security: [ 'Security Operations Engineer', 'Application Security Engineer' ],
+  Finance: ['Financial Analyst', 'Strategic Finance Analyst'],
+  Legal: ['Employment Counsel', 'User Policy Specialist'],
+  Marketing: ['Marketing Operations Manager', 'Presentation Designer'],
+  People: ['Recruiter', 'HR Director'],
+  Sales: ['Enterprise Account Manager', 'Solutions Engineer'],
+  Security: ['Security Operations Engineer', 'Application Security Engineer'],
 };
 
 const random = arr => arr[Math.floor(Math.random() * arr.length)];

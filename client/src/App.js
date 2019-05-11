@@ -79,7 +79,7 @@ export default class App extends Component {
     return (
       <div className="container-fluid mb-5">
         <header className="d-flex justify-content-center">
-          <h1>Employee Directory</h1>
+          <a href="/" style={{ color: 'inherit' }}><h1>Employee Directory</h1></a>
         </header>
         <Search value={searchQuery} onChange={e => this.handleSearch(e)} />
         <section className="d-flex flex-sm-row flex-column">

@@ -6,7 +6,7 @@ const { exec, count, findOne } = require('./utils');
 const db = new DataStore({ filename: 'employees.db', autoload: true });
 const app = express();
 const port = process.env.PORT || 3001;
-const pageSize = 25;
+const pageSize = 50;
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static('client/build'));

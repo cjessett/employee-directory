@@ -15,6 +15,7 @@ export default class App extends Component {
       department: '',
       location: '',
       title: '',
+      searchQuery: '',
     };
   }
 
@@ -33,19 +34,33 @@ export default class App extends Component {
     this.setState({ [name]: value });
   }
   
+  handleSearch({ target: { value } }) {
+    this.setState({ searchQuery: value });
+  }
+  
+  searchFilter(employees) {
+    const { searchQuery } = this.state;
+    if (!searchQuery) return employees;
+    const queryFilter = prop => employee => employee[prop].toLowerCase().startsWith(searchQuery.toLowerCase());
+    const firstNameMatches = employees.filter(queryFilter('firstName'));
+    const lastNameMatches = employees.filter(queryFilter('lastName'));
+    return [...firstNameMatches, ...lastNameMatches].filter((v, i, s) => s.indexOf(v) === i);
+  }
+  
   getVisibleEmployees(employees) {
     const { department, location, title } = this.state;
     const departmentFilter = el => department ? el.department === department : true;
     const locationFilter = el => location ? el.location === location : true;
     const titleFilter = el => title ? el.jobTitle === title : true;
-    return employees
+    const filtered = employees
       .filter(departmentFilter)
       .filter(locationFilter)
       .filter(titleFilter);
+    return this.searchFilter(filtered);
   }
   
   render() {
-    const { departments, locations, department, location, title } = this.state;
+    const { departments, locations, department, location, title, searchQuery } = this.state;
     const ready = !!this.state.employees.length;
     const visibleEmployees = this.getVisibleEmployees(this.state.employees);
     const employees = visibleEmployees
@@ -57,7 +72,7 @@ export default class App extends Component {
         <header className="d-flex justify-content-center">
           <h1>Employee Directory</h1>
         </header>
-        <Search />
+        <Search value={searchQuery} onChange={e => this.handleSearch(e)} />
         <section className="d-flex flex-sm-row flex-column">
           <Filter name="Department" options={departments} value={department} onSelect={e => this.handleSelect(e)} />
           <Filter name="Title" options={visibleTitles} value={title} onSelect={e => this.handleSelect(e)} />

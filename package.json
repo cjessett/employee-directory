@@ -1,12 +1,12 @@
 {
   "name": "employee-directory",
   "version": "1.0.0",
-  "main": "server.js",
+  "main": "server/index.js",
   "license": "MIT",
   "scripts": {
     "start": "concurrently \"yarn run server\" \"yarn run client\"",
     "build": "cd client && yarn build",
-    "server": "node server.js",
+    "server": "node server/index.js",
     "client": "cd client && yarn start",
     "seed": "node db/seed.js"
   },
@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "express": "^4.16.4",
-    "faker": "^4.1.0"
+    "faker": "^4.1.0",
+    "nedb": "^1.8.0"
   }
 }

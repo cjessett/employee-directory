@@ -1,5 +1,7 @@
 const faker = require('faker');
-const fs = require('fs');
+const DataStore = require('nedb');
+
+const db = new DataStore({ filename: 'employees.db', autoload: true });
 
 const company = 'Hooli';
 
@@ -27,7 +29,7 @@ const departments = {
 
 const random = arr => arr[Math.floor(Math.random() * arr.length)];
 
-function generateEmployee(id) {
+function generateEmployee() {
   const firstName = faker.name.firstName();
   const lastName = faker.name.lastName();
   const email = `${firstName}.${lastName}@${company.toLowerCase()}.com`;
@@ -35,7 +37,6 @@ function generateEmployee(id) {
   const jobTitle = random(departments[department]);
 
   return {
-    id,
     firstName,
     lastName,
     email,
@@ -47,10 +48,6 @@ function generateEmployee(id) {
   };
 }
 
-const employees = [];
-
 for (let i = 0; i < 1000; i++) { // eslint-disable-line no-plusplus
-  employees.push(generateEmployee(i));
+  db.insert(generateEmployee());
 }
-
-fs.writeFileSync('employees.json', JSON.stringify(employees));

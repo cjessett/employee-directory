@@ -9,7 +9,7 @@ client/node_modules
 client/build
 
 # misc
-employees.json
+employees.db
 .DS_Store
 .env.local
 .env.development.local

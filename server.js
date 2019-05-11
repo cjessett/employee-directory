@@ -9,7 +9,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const rawData = fs.readFileSync('employees.json');
-const employees = JSON.parse(rawData);
+const { employees } = JSON.parse(rawData);
 
 app.get('/api/employees', (req, res) => res.json({ result: employees }));
 

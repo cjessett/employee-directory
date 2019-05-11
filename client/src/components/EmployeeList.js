@@ -15,6 +15,7 @@ export default function EmployeeList({ ready, employees }) {
         />
     );
   });
+  if (!employees.length) return <h5 className="mx-auto mt-5">No results</h5>;
   return (
     <ReactPlaceholder ready={ready} customPlaceholder={custom} children={employees} />
   )

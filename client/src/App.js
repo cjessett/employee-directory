@@ -29,6 +29,7 @@ export default class App extends Component {
   handleSelect(e) {
     const { id, value } = e.target;
     const name = id.toLowerCase();
+    if (name === 'department') this.setState({ title: '' });
     this.setState({ [name]: value });
   }
   
@@ -44,11 +45,13 @@ export default class App extends Component {
   }
   
   render() {
-    const { departments, locations, titles, department, location, title } = this.state;
+    const { departments, locations, department, location, title } = this.state;
     const ready = !!this.state.employees.length;
-    const employees = this.getVisibleEmployees(this.state.employees)
+    const visibleEmployees = this.getVisibleEmployees(this.state.employees);
+    const employees = visibleEmployees
       .sort((a,b) => a.lastName > b.lastName)
       .map(employee => <Employee key={employee.id} {...employee} />)
+    const visibleTitles = [...new Set(visibleEmployees.map(e => e.jobTitle))]
     return (
       <div className="container-fluid">
         <header className="d-flex justify-content-center">
@@ -57,7 +60,7 @@ export default class App extends Component {
         <Search />
         <section className="d-flex flex-sm-row flex-column">
           <Filter name="Department" options={departments} value={department} onSelect={e => this.handleSelect(e)} />
-          <Filter name="Title" options={titles} value={title} onSelect={e => this.handleSelect(e)} />
+          <Filter name="Title" options={visibleTitles} value={title} onSelect={e => this.handleSelect(e)} />
           <Filter name="Location" options={locations} value={location} onSelect={e => this.handleSelect(e)} />
         </section>
         <section className="d-flex">

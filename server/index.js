@@ -1,9 +1,9 @@
-const DataStore = require('nedb');
 const express = require('express');
 
-const { exec, count, findOne } = require('./utils');
+const knex = require('../knex');
+const { to, db: DB } = require('./utils');
 
-const db = new DataStore({ filename: 'employees.db', autoload: true });
+const db = DB(knex);
 const app = express();
 const port = process.env.PORT || 3001;
 const pageSize = 50;
@@ -13,25 +13,36 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 app.get('/api/employees', async (req, res) => {
-  let err, total, result;
-  const page = parseInt(req.query.page || 1, 0);
-  const sortedPaginatedQuery = db
-    .find({})
-    .sort({ lastName: 1 })
-    .skip((page - 1) * pageSize)
+  const { department, jobTitle, location, page } = req.query; // eslint-disable-line
+  const pageNo = parseInt(page || 1, 0);
+
+  const employeesPromise = db
+    .getEmployees()
+    .modify((qb) => {
+      if (department) qb.where({ department });
+      if (jobTitle) qb.where({ jobTitle });
+      if (location) qb.where({ location });
+    });
+
+  const count = await db.count(employeesPromise.clone());
+  const pages = count > pageSize ? Math.ceil(count / pageSize) : 1;
+
+  const paginatedEmployees = employeesPromise
+    .orderBy('lastName')
+    .offset((pageNo - 1) * pageSize)
     .limit(pageSize);
 
-  [err, total] = await count(db);
-  if (err) return res.sendStatus(500);
+  const [err, result] = await to(paginatedEmployees);
+  if (err) {
+    console.error(err);
+    return res.sendStatus(500);
+  }
 
-  [err, result] = await exec(sortedPaginatedQuery);
-  if (err) console.error(err);
-
-  return res.json({ result, pageSize, pages: total / pageSize });
+  return res.json({ result, pageSize, pages });
 });
 
 app.get('/api/employees/:id', async (req, res) => {
-  const [err, result] = await findOne(db, { _id: req.params.id });
+  const [err, result] = await to(db.getEmployeeById(req.params.id));
   if (err) {
     console.error(err);
     return res.sendStatus(500);

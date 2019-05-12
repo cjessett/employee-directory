@@ -9,7 +9,7 @@ client/node_modules
 client/build
 
 # misc
-employees.db
+dev.sqlite3
 .DS_Store
 .env.local
 .env.development.local

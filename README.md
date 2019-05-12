@@ -10,9 +10,9 @@ For the client
 cd client && yarn
 ```
 
-Seed the db
+Setup the database
 ```
-yarn seed
+yarn db:setup
 ```
 
 #### Starting the application

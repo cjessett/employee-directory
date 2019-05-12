@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from "react-router-dom";
 
-export default function EmployeeItem({ _id, firstName, lastName, jobTitle, avatar }) {
+export default function EmployeeItem({ id, firstName, lastName, jobTitle, avatar }) {
   return (
     <Link
-      to={`/employees/${_id}`}
+      to={`/employees/${id}`}
       className="list-group-item list-group-item-action">
       <img style={{ width: '80px' }} className="img-thumbnail mr-2" src={avatar} alt="avatar" />
       <div style={{ display: 'inline-block' }} className="align-middle">

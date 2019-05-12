@@ -5,8 +5,9 @@ import { Search, Filter, EmployeeList, EmployeeItem, Paginator } from './compone
 import { getEmployees } from './client';
 
 export default class App extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+    window.props = props;
     this.state = {
       employees: [],
       departments: [],
@@ -54,15 +55,7 @@ export default class App extends Component {
   }
   
   getVisibleEmployees(employees) {
-    const { department, location, title } = this.state;
-    const departmentFilter = el => department ? el.department === department : true;
-    const locationFilter = el => location ? el.location === location : true;
-    const titleFilter = el => title ? el.jobTitle === title : true;
-    const filtered = employees
-      .filter(departmentFilter)
-      .filter(locationFilter)
-      .filter(titleFilter);
-    return this.searchFilter(filtered);
+    return this.searchFilter(employees);
   }
   
   getVisibleTitles(employees) {
@@ -74,7 +67,7 @@ export default class App extends Component {
   render() {
     const { departments, locations, department, location, title, searchQuery, page, pages } = this.state;
     const visibleEmployees = this.getVisibleEmployees(this.state.employees);
-    const employees = visibleEmployees.map(employee => <EmployeeItem key={employee._id} {...employee} />)
+    const employees = visibleEmployees.map(employee => <EmployeeItem key={employee.id} {...employee} />)
     const visibleTitles = this.getVisibleTitles(visibleEmployees).sort();
     return (
       <div className="container-fluid mb-5">
@@ -86,6 +79,7 @@ export default class App extends Component {
           <Filter name="Department" options={departments} value={department} onSelect={e => this.handleSelect(e)} />
           <Filter name="Title" options={visibleTitles} value={title} onSelect={e => this.handleSelect(e)} />
           <Filter name="Location" options={locations} value={location} onSelect={e => this.handleSelect(e)} />
+          <button className="btn btn-outline-secondary mb-3 m-1" type="button">Search</button>
         </section>
         <section className="d-flex mb-5">
           <EmployeeList ready={!!this.state.employees.length} employees={employees} />

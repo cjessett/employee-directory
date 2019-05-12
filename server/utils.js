@@ -4,30 +4,35 @@ function to(promise) {
     .catch(err => [err]);
 }
 
-function count(db, opt) {
-  return to(new Promise((resolve, reject) => {
-    db.count(opt, (err, doc) => {
-      if (err) reject(err);
-      resolve(doc);
-    });
-  }));
-}
-
-function exec(query) {
-  return to(new Promise((resolve, reject) => {
-    query.exec((e, d) => (e ? reject(e) : resolve(d)));
-  }));
-}
-
-function findOne(db, opts) {
-  return to(new Promise((resolve, reject) => {
-    db.findOne(opts, (e, d) => (e ? reject(e) : resolve(d)));
-  }));
-}
+const db = knex => ({
+  getEmployees() {
+    const cols = [
+      'employees.id',
+      'firstName',
+      'lastName',
+      'departments.name as department',
+      'email',
+      'phone',
+      'avatar',
+      'location',
+      'job_titles.name as jobTitle',
+    ];
+    return knex('employees')
+      .join('departments', 'departments.id', 'employees.department_id')
+      .join('job_titles', 'job_titles.id', 'employees.job_title_id')
+      .select(...cols);
+  },
+  getEmployeeById(id) {
+    return this.getEmployees().where('employees.id', id).first();
+  },
+  async count(query) {
+    const [err, result] = await to(query.count());
+    if (err) return err;
+    return result[0]['count(*)'];
+  },
+});
 
 module.exports = {
   to,
-  count,
-  exec,
-  findOne,
+  db,
 };

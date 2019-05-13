@@ -12,7 +12,30 @@ if (process.env.NODE_ENV === 'production') {
   app.use(express.static('client/build'));
 }
 
+app.get('/api/departments', async (req, res) => {
+  const [err, result] = await db.getDepartments();
+  if (err) console.error(err);
+
+  res.json({ result });
+});
+
+app.get('/api/titles', async (req, res) => {
+  const [err, result] = await db.getTitles();
+  if (err) console.error(err);
+
+  res.json({ result });
+});
+
+app.get('/api/locations', async (req, res) => {
+  const [err, result] = await db.getLocations();
+  if (err) console.error(err);
+
+  res.json({ result });
+});
+
 app.get('/api/employees', async (req, res) => {
+  let err, result;
+
   const { department, jobTitle, location, page } = req.query; // eslint-disable-line
   const pageNo = parseInt(page || 1, 0);
 
@@ -32,7 +55,7 @@ app.get('/api/employees', async (req, res) => {
     .offset((pageNo - 1) * pageSize)
     .limit(pageSize);
 
-  const [err, result] = await to(paginatedEmployees);
+  [err, result] = await to(paginatedEmployees);
   if (err) {
     console.error(err);
     return res.sendStatus(500);

@@ -30,6 +30,15 @@ const db = knex => ({
     if (err) return err;
     return result[0]['count(*)'];
   },
+  getDepartments() {
+    return to(knex('departments').pluck('name'));
+  },
+  getTitles() {
+    return to(knex('job_titles').pluck('name'));
+  },
+  getLocations() {
+    return to(knex('employees').distinct('location').pluck('location'));
+  },
 });
 
 module.exports = {

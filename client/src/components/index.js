@@ -1,5 +1,5 @@
 import Search from './Search';
-import Filter from './Filter';
+import FilterList from './FilterList';
 import EmployeeList from './EmployeeList';
 import EmployeeItem from './EmployeeListItem';
 import EmployeePage from './EmployeePage';
@@ -7,7 +7,7 @@ import Paginator from './Paginator';
 
 export {
   Search,
-  Filter,
+  FilterList,
   EmployeeList,
   EmployeeItem,
   EmployeePage,

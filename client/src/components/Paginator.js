@@ -1,18 +1,23 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
-export default function Paginator({ page, pages }) {
-  const pageLink = pageNo => `?page=${pageNo}`;
-  const lastPageLink = pageLink(page - 1);
-  const nextPageLink = pageLink(page + 1);
+import { updatePage } from '../store/ducks/employees';
+
+function Paginator({ page, pages, updatePage }) {
+  const handleClick = page => e => {
+    e.preventDefault();
+    updatePage(page);
+    window.scrollTo(0, 0)
+  }
   const pageLinks = getVisiblePages(page, pages).map(p => {
-    const style = p === page ? { pointerEvent: 'none', color: 'inherit' } : {};
-    return <a key={p} className="m-1" href={pageLink(p)} style={style}>{p}</a>
+    const style = p === page ? { pointerEvents: 'none', color: 'inherit' } : {};
+    return <a key={p} href="" onClick={handleClick(p)} className="m-1" style={style}>{p}</a>
   });
   return (
     <div>
-      {page > 1 && <a href={lastPageLink} className="m-1" type="button">Previous</a>}
+      {page > 1 && <button onClick={handleClick(page - 1)} className="btn btn-outline-primary m-1" type="button">Previous</button>}
       <span className="m-3">{pageLinks}</span>
-      {page < pages && <a href={nextPageLink} className="m-1" type="button">Next</a>}
+      {page < pages && <button onClick={handleClick(page + 1)} className="btn btn-outline-primary m-1" type="button">Next</button>}
     </div>
   )
 }
@@ -33,8 +38,14 @@ function getVisiblePages(currentPage, totalPages) {
     start = totalPages - limit;
     end = totalPages;
   }
-  
+
   const range = (s, e) => [...Array(e - s).keys()].map(i => i + 1 + s);
-  
+
   return range(start, end);
 }
+
+function mapStateToProps({ employees: { page, pages } }) {
+  return { page, pages };
+}
+
+export default connect(mapStateToProps, { updatePage })(Paginator);

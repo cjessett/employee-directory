@@ -1,7 +1,7 @@
 # Employee Directory
 
 ## Getting started
-#### Install dependencies
+### Install dependencies
 ```
 yarn
 ```
@@ -10,35 +10,43 @@ For the client
 cd client && yarn
 ```
 
-##### For Development
+#### For Development
 Setup the database
 ```
 yarn db:setup
 ```
 
-Start the App
+Start the server
 ```
-yarn server & yarn client
+yarn server
 ```
 
-##### For Production
+Start the client
 
-Ensure a PGSQL database exists
 ```
-// on a mac
+yarn client
+```
+
+#### For Production
+
+Ensure a PGSQL database name `employee_directory` exists
+```
+ // on a Mac
 createdb employee_directory
 ```
+
 Setup the database
 ```
 NODE_ENV=production yarn db:setup
 ```
+
 Build the client
 ```
 yarn build
 ```
 Start the server
 ```
-NODE_ENV=production yarn start
+yarn start
 ```
 Visit http://localhost:3001
 

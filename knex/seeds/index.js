@@ -63,9 +63,9 @@ function createEmployee() {
 exports.seed = async (knex) => {
   let err, records;
 
-  await knex('departments').del();
-  await knex('job_titles').del();
   await knex('employees').del();
+  await knex('job_titles').del();
+  await knex('departments').del();
 
   // Create departments
   [err, records] = await to(knex('departments').insert(departments));

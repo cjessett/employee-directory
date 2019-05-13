@@ -34,7 +34,7 @@ app.get('/api/locations', async (req, res) => {
 });
 
 app.get('/api/employees', async (req, res) => {
-  let err, result;
+  let err, result, count;
 
   const { department, jobTitle, location, page } = req.query; // eslint-disable-line
   const pageNo = parseInt(page || 1, 0);
@@ -42,12 +42,13 @@ app.get('/api/employees', async (req, res) => {
   const employeesPromise = db
     .getEmployees()
     .modify((qb) => {
-      if (department) qb.where({ department });
-      if (jobTitle) qb.where({ jobTitle });
+      if (department) qb.where('departments.name', department);
+      if (jobTitle) qb.where('job_titles.name', jobTitle);
       if (location) qb.where({ location });
     });
 
-  const count = await db.count(employeesPromise.clone());
+  [err, count] = await db.count(employeesPromise.clone());
+  if (err) console.error(err);
   const pages = count > pageSize ? Math.ceil(count / pageSize) : 1;
 
   const paginatedEmployees = employeesPromise

@@ -26,9 +26,9 @@ const db = knex => ({
     return this.getEmployees().where('employees.id', id).first();
   },
   async count(query) {
-    const [err, result] = await to(query.count());
-    if (err) return err;
-    return result[0]['count(*)'];
+    const [err, result] = await to(query.clearSelect().count());
+    if (err) return [err];
+    return [null, result[0].count];
   },
   getDepartments() {
     return to(knex('departments').pluck('name'));

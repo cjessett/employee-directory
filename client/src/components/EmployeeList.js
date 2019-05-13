@@ -6,10 +6,10 @@ import { getEmployees, getVisibleEmployees } from '../store/ducks/employees';
 
 import EmployeeItem from './EmployeeListItem';
 
-function EmployeeList({ employees, ready, getEmployees, pages }) {
+function EmployeeList({ employees, ready, getEmployees, pages, hasFetched }) {
   useEffect(() => {
-    if (!employees.length) getEmployees();
-  }, [getEmployees, employees])
+    if (!hasFetched) getEmployees();
+  }, [getEmployees, hasFetched])
 
   if (!employees.length && ready) return <h5 className="mx-auto mt-5">No Results</h5>;
   const custom = [...Array(10).keys()].map(i => {
@@ -34,9 +34,9 @@ function EmployeeList({ employees, ready, getEmployees, pages }) {
 }
 
 function mapStateToProps({ employees }) {
-  const { isLoading, collection, searchValue, pages } = employees;
+  const { isLoading, collection, searchValue, pages, hasFetched } = employees;
   const visibleEmployees = getVisibleEmployees(collection, searchValue);
-  return { employees: visibleEmployees, ready: !isLoading, pages };
+  return { employees: visibleEmployees, ready: !isLoading, pages, hasFetched };
 }
 
 export default connect(mapStateToProps, { getEmployees })(EmployeeList);

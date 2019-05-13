@@ -30,11 +30,10 @@ const successAction = (type, data) => ({ type, payload: data });
 export const setSearchValue = value => ({ type: 'SET_SEARCH_VALUE', payload: value });
 
 export const getEmployees = params => async (dispatch, getState) => {
-  const { filters: { department, jobTitle, location } } = getState();
-  const defaultParams = { page: 1, department, jobTitle, location, ...params };
+  const { employees: { page = 1 }, filters: { department, jobTitle, location } } = getState();
+  const defaultParams = { page, department, jobTitle, location, ...params };
   const queryParams = new URLSearchParams(defaultParams);
   // const page = parseInt(params.get('page'), 0) || 1;
-  const { page } = defaultParams;
   dispatch(startAction(FETCH_EMPLOYEES, defaultParams));
   const res = await fetch(`${baseUrl}?${queryParams}`);
   const { result, pageSize, pages } = await res.json();
@@ -50,11 +49,11 @@ export const getEmployee = id => async dispatch => {
 
 export const updatePage = page => dispatch => {
   dispatch(successAction(SET_PAGE, page));
-  dispatch(getEmployees({ page }));
 }
 
 const initialState = {
   isLoading: false,
+  hasFetched: false,
   error: null,
   collection: [],
   pageSize: 0,
@@ -71,12 +70,14 @@ export default function(state = initialState, { type, payload }) {
         ...state,
         isLoading: true,
         error: null,
+        hasFetched: false,
       };
     case FETCH_EMPLOYEES_ERROR:
       return {
         ...state,
         error: payload,
         isLoading: false,
+        hasFetched: true,
       };
     case FETCH_EMPLOYEES_SUCCESS:
       return {
@@ -86,6 +87,7 @@ export default function(state = initialState, { type, payload }) {
         pages: payload.pages,
         page: payload.page,
         isLoading: false,
+        hasFetched: true,
       };
     case FETCH_EMPLOYEE:
       return {
@@ -108,6 +110,7 @@ export default function(state = initialState, { type, payload }) {
       return {
         ...state,
         page: payload,
+        hasFetched: false,
       }
     default:
       return state;

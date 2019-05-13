@@ -29,12 +29,10 @@ const successAction = (type, data) => ({ type, payload: data });
 // const errorAction = (type, error) => ({ type, payload: error, error: true });
 export const setSearchValue = value => ({ type: 'SET_SEARCH_VALUE', payload: value });
 
-export const getEmployees = params => async (dispatch, getState) => {
-  const { employees: { page = 1 }, filters: { department, jobTitle, location } } = getState();
-  const defaultParams = { page, department, jobTitle, location, ...params };
-  const queryParams = new URLSearchParams(defaultParams);
-  // const page = parseInt(params.get('page'), 0) || 1;
-  dispatch(startAction(FETCH_EMPLOYEES, defaultParams));
+export const getEmployees = (params = { page: 1 }) => async (dispatch, getState) => {
+  const page = params.page || 1;
+  const queryParams = new URLSearchParams(params);
+  dispatch(startAction(FETCH_EMPLOYEES, params));
   const res = await fetch(`${baseUrl}?${queryParams}`);
   const { result, pageSize, pages } = await res.json();
   dispatch(successAction(FETCH_EMPLOYEES_SUCCESS, { result, pageSize, pages, page }));
@@ -47,8 +45,10 @@ export const getEmployee = id => async dispatch => {
   dispatch(successAction(FETCH_EMPLOYEE_SUCCESS, { result }));
 }
 
-export const updatePage = page => dispatch => {
+export const updatePage = page => (dispatch, getState) => {
+  const { filters: { department, jobTitle, location } } = getState();
   dispatch(successAction(SET_PAGE, page));
+  dispatch(getEmployees({ department, jobTitle, location, page }));
 }
 
 const initialState = {

@@ -35,7 +35,7 @@ function FilterList(props) {
       <Filter name="Department" options={departments} value={department} onSelect={e => setDepartment(e.target.value)} />
       <Filter name="Title" options={titles} value={jobTitle} onSelect={e => setJobTitle(e.target.value)} />
       <Filter name="Location" options={locations} value={location} onSelect={e => setLocation(e.target.value)} />
-      <button onClick={() => getEmployees({ department, jobTitle, location })} className="btn btn-outline-secondary mb-3 m-1" type="button">Search</button>
+      <button onClick={() => getEmployees({ department, jobTitle, location, page: 1 })} className="btn btn-outline-secondary mb-3 m-1" type="button">Search</button>
     </div>
   );
 }
